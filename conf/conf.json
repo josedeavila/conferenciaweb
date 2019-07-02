@@ -1,0 +1,11 @@
+{
+  "dns_oracle": "sro/sro1975hom@scan-ac07:1521/ac07",
+  "rethinkdb": {
+      "dns_rethinkdb": "localhost:28015",
+      "database_rethinkdb": "conferenciaeletronica"
+  },    
+  "redis": {
+    "network": "tcp",
+    "address": ":6379"
+  }
+}
