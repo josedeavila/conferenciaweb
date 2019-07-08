@@ -18,7 +18,7 @@ type Client struct {
 	session      *r.Session
 	stopChannels map[int]chan bool
 	id           string
-	UserId       string
+	IdUser       string
 }
 
 func (c *Client) NewStopChannel(stopKey int) chan bool {
@@ -100,8 +100,11 @@ func NewClient(socket *websocket.Conn, findHandler FindHandler,
 		log.Println(err.Error())
 	}
 	var id string
+	fmt.Println("NewClient recebida 3: ", res, res.GeneratedKeys)
 	if len(res.GeneratedKeys) > 0 {
 		id = res.GeneratedKeys[0]
+	}else{
+		fmt.Println("NewClient recebida 3 else: ", res, res.GeneratedKeys)
 	}
 
 	return &Client{
@@ -111,6 +114,6 @@ func NewClient(socket *websocket.Conn, findHandler FindHandler,
 		session:      session,
 		stopChannels: make(map[int]chan bool),
 		id:           id,
-		UserId:       user.Id,
+		IdUser:       user.Id,
 	}
 }

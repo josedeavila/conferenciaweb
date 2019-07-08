@@ -16,12 +16,18 @@ type Unitizador struct {
 	Evento           string    `gorethink:"evento"`
 	IdUnidadeOrigem  string    `gorethink:"idorigem"`
 	IdUnidadeDestino string    `gorethink:"iddestino"`
+	McmcuUnidadeDestino            string    `gorethink:"mcmcu"`
+	CepUnidadeDestino            string    `gorethink:"cep"`
+	NomeUnidadeDestino            string    `gorethink:"nome"`
 	NumeroServico        string    `gorethink:"numero_servico"`
 	NumeroUnitizador     string    `gorethink:"numero_unitizador"`
 	PrazoUrg            int       `gorethink:"prazo_urg"`
 	PrazoNurg            int       `gorethink:"prazo_nao_urg"`
 	QuantidadeItens  int       `gorethink:"quantidade_itens"`
+	QuantidadeItensPendentes  int       `gorethink:"quantidade_pendentes"`
 	Itens            []Item    `gorethink:"itens"`
+	IdSe            string    `gorethink:"idse"`
+	SiglaSe            string    `gorethink:"siglase"`
 }
 
 
@@ -32,7 +38,7 @@ func (u *Unitizador) InserirItemNoUnitizador(item Item) {
 }
 
 func SelecionaUnitizadores(ini time.Time, s *r.Session) {
-	unitizadores := make([]Unitizador, 0)
+	
 	for {
 		
 
@@ -49,7 +55,8 @@ func SelecionaUnitizadores(ini time.Time, s *r.Session) {
 		fim = now
 		}
 
-
+		unitizadores := make([]Unitizador, 0)
+		
 		query := `SELECT t.tae_code, t.TAE_UNICEPORI, 
 					t.TAE_UNICEPDES, t.TAE_RECEPTACLE, 
 					t.TAE_CREATETIME, t.TAE_ALERTTYPE, 
@@ -91,11 +98,10 @@ func SelecionaUnitizadores(ini time.Time, s *r.Session) {
 
 		
 		if len(unitizadores) > 0 {
-			copia := unitizadores
+						
+			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), " unitizadores ", unitizadores, s)
 			
-			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), " unitizadores ", copia, s)
-			
-			InsereUnitizador(copia, s)
+			InsereUnitizador(unitizadores, s)
 		
 		}else{
             fmt.Println(time.Now().Format("2006-01-02 15:04:05"), " não tem unitizadores ", unitizadores)

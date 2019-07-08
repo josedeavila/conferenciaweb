@@ -7,8 +7,8 @@ import (
 	"time"
 	"net/http"
 
-	"./conf"
-	"./sronacional/modelo"
+	"github.com/conferenciaweb/conf"
+	"github.com/conferenciaweb/sronacional/modelo"
 
 	r "github.com/dancannon/gorethink"
 	_ "github.com/mattn/go-oci8"
@@ -35,8 +35,6 @@ func main() {
 		log.Panic(err1.Error())
 	}
 
-	router := NewRouter(session)
-
 	//modelo.RethinkDB(session)
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), session)
 
@@ -51,27 +49,29 @@ func main() {
 		erroFatal(erri.Error())
 	}
 
-	
+	fmt.Println("ini ",ini)
+
+	//iniE := ini
+
+
+	//go modelo.SelecionaUnitizadores(ini, session)
+	if err != nil {
+		erroFatal(err.Error())
+	}
+
+	//go modelo.SelecionaEventos(iniE, session)
+	if err != nil {
+		erroFatal(err.Error())
+	}
+
+	router := NewRouter(session)
+	router.Handle("unidade subscribe", subscribeUnidade)
+	//router.Handle("channel subscribe", subscribeChannel)
 	http.Handle("/", router)
 	http.ListenAndServe(":4000", nil)
 
-	fmt.Println("ini ",ini)
-
-	iniE := ini
-
-
-	go modelo.SelecionaUnitizadores(ini, session)
-	if err != nil {
-		erroFatal(err.Error())
-	}
-
-	go modelo.SelecionaEventos(iniE, session)
-	if err != nil {
-		erroFatal(err.Error())
-	}
-
-	ch := make(chan struct{})
-	<-ch
+	//ch := make(chan struct{})
+	//<-ch
 
 }
 
